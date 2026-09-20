@@ -1,0 +1,110 @@
+{
+  "formatVersion": 1,
+  "vendor": "postgresql",
+  "queryFingerprint": "q_orders_customer_01",
+  "schemaDigest": "schema_orders_v3",
+  "schemaSummary": {
+    "tables": [
+      "orders",
+      "customers"
+    ]
+  },
+  "statsVersion": "stats_2026_09_20",
+  "parameters": {
+    "work_mem": "16MB",
+    "enable_hashjoin": true,
+    "timezone": "UTC",
+    "isolation": "read committed"
+  },
+  "collectedAt": "2026-09-20T11:00:00.000Z",
+  "plan": {
+    "Plan": {
+      "Node Type": "Nested Loop",
+      "Join Type": "Inner",
+      "Plan Rows": 250,
+      "Total Cost": 1500.25,
+      "Plans": [
+        {
+          "Parent Relationship": "Outer",
+          "Node Type": "Seq Scan",
+          "Relation Name": "orders",
+          "Alias": "o",
+          "Plan Rows": 700,
+          "Total Cost": 210.0,
+          "x-partitions": {
+            "selected": [
+              "p2026_09"
+            ],
+            "pruned": [
+              "p2026_07",
+              "p2026_08"
+            ],
+            "strategy": "range"
+          },
+          "Plans": [],
+          "Filter": "(status = 'OPEN')",
+          "Output": [
+            "o.id",
+            "o.customer_id"
+          ]
+        },
+        {
+          "Parent Relationship": "Inner",
+          "Node Type": "Index Scan",
+          "Relation Name": "customers",
+          "Alias": "c",
+          "Index Name": "customers_segment_idx",
+          "Index Key": [
+            "segment",
+            "id"
+          ],
+          "Plan Rows": 1,
+          "Total Cost": 0.8,
+          "Index Cond": "((c.segment = 'ENTERPRISE') AND (c.id = o.customer_id))",
+          "Plans": [],
+          "Output": [
+            "c.id",
+            "c.segment"
+          ]
+        }
+      ],
+      "Join Cond": "(c.id = o.customer_id)",
+      "Output": [
+        "orders.id",
+        "customers.segment"
+      ]
+    }
+  },
+  "runs": [
+    {
+      "id": "run-i-1",
+      "status": "completed",
+      "startedAt": "2026-09-20T11:01:00Z",
+      "elapsedMs": 78
+    },
+    {
+      "id": "run-i-2",
+      "status": "completed",
+      "startedAt": "2026-09-20T11:02:00Z",
+      "elapsedMs": 81
+    },
+    {
+      "id": "run-i-3",
+      "status": "completed",
+      "startedAt": "2026-09-20T11:03:00Z",
+      "elapsedMs": 76
+    },
+    {
+      "id": "run-i-4",
+      "status": "completed",
+      "startedAt": "2026-09-20T11:04:00Z",
+      "elapsedMs": 80
+    },
+    {
+      "id": "run-i-5",
+      "status": "completed",
+      "startedAt": "2026-09-20T11:05:00Z",
+      "elapsedMs": 79
+    }
+  ]
+}

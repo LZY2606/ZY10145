@@ -1,0 +1,58 @@
+{
+  "formatVersion": 1,
+  "vendor": "postgresql",
+  "queryFingerprint": "q_orders_customer_01",
+  "schemaDigest": "schema_orders_v3",
+  "schemaSummary": { "tables": ["orders", "customers"] },
+  "statsVersion": "stats_2026_09_20",
+  "parameters": { "work_mem": "16MB", "enable_hashjoin": true, "timezone": "UTC", "isolation": "read committed" },
+  "collectedAt": "2026-09-20T10:00:00.000Z",
+  "plan": {
+    "Plan": {
+      "Node Type": "Hash Join",
+      "Join Type": "Inner",
+      "Hash Cond": "(c.id = o.customer_id)",
+      "Plan Rows": 1000,
+      "Total Cost": 3600.0,
+      "Plans": [
+        {
+          "Parent Relationship": "Outer",
+          "Node Type": "Index Scan",
+          "Relation Name": "customers",
+          "Alias": "c",
+          "Index Name": "customers_pkey",
+          "Index Key": ["id"],
+          "Plan Rows": 200,
+          "Total Cost": 50.0,
+          "Plans": []
+        },
+        {
+          "Parent Relationship": "Inner",
+          "Node Type": "Hash",
+          "Plan Rows": 5000,
+          "Total Cost": 700.0,
+          "Plans": [
+            {
+              "Parent Relationship": "Outer",
+              "Node Type": "Seq Scan",
+              "Relation Name": "orders",
+              "Alias": "o",
+              "Filter": "(status = 'OPEN')",
+              "Plan Rows": 5000,
+              "Total Cost": 650.0,
+              "x-partitions": { "selected": ["p2026_09"], "pruned": ["p2026_07", "p2026_08"], "strategy": "range" },
+              "Plans": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "runs": [
+    { "id": "run-h-1", "status": "completed", "startedAt": "2026-09-20T10:01:00Z", "elapsedMs": 140 },
+    { "id": "run-h-2", "status": "completed", "startedAt": "2026-09-20T10:02:00Z", "elapsedMs": 146 },
+    { "id": "run-h-3", "status": "completed", "startedAt": "2026-09-20T10:03:00Z", "elapsedMs": 139 },
+    { "id": "run-h-4", "status": "completed", "startedAt": "2026-09-20T10:04:00Z", "elapsedMs": 143 },
+    { "id": "run-h-5", "status": "completed", "startedAt": "2026-09-20T10:05:00Z", "elapsedMs": 142 }
+  ]
+}

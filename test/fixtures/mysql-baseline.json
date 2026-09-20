@@ -1,0 +1,52 @@
+{
+  "formatVersion": 1,
+  "vendor": "mysql",
+  "queryFingerprint": "q_lineitem_supplier_mysql",
+  "schemaDigest": "schema_tpch_v1",
+  "schemaSummary": { "tables": ["lineitem", "supplier"] },
+  "statsVersion": "mysql_stats_a",
+  "parameters": { "optimizer_switch": "hash_join=on", "join_buffer_size": 262144, "sql_mode": "STRICT_TRANS_TABLES" },
+  "collectedAt": "2026-09-20T12:00:00Z",
+  "plan": {
+    "queryBlock": {
+      "nodeType": "NESTED_LOOP_JOIN",
+      "joinType": "INNER",
+      "accessCondition": "lineitem.l_suppkey = supplier.s_suppkey",
+      "estimatedRows": 10000,
+      "estimatedCost": 9900.0,
+      "children": [
+        {
+          "role": "driving",
+          "nodeType": "TABLE_SCAN",
+          "tableName": "lineitem",
+          "tableAlias": "l",
+          "estimatedRows": 60000,
+          "estimatedCost": 5000.0,
+          "condition": "l_shipdate >= '2026-01-01'",
+          "partitionDecision": { "selected": ["y2026"], "pruned": ["y2024", "y2025"], "strategy": "range" },
+          "actualRows": 59980,
+          "execNodeId": "volatile-1001",
+          "children": []
+        },
+        {
+          "role": "driven",
+          "nodeType": "PRIMARY_KEY_LOOKUP",
+          "tableName": "supplier",
+          "tableAlias": "s",
+          "indexName": "PRIMARY",
+          "indexColumns": ["s_suppkey"],
+          "estimatedRows": 1,
+          "estimatedCost": 0.5,
+          "children": []
+        }
+      ]
+    }
+  },
+  "runs": [
+    { "id": "m-1", "status": "completed", "startedAt": "2026-09-20T12:01:00Z", "elapsedMs": 210 },
+    { "id": "m-2", "status": "completed", "startedAt": "2026-09-20T12:02:00Z", "elapsedMs": 215 },
+    { "id": "m-3", "status": "completed", "startedAt": "2026-09-20T12:03:00Z", "elapsedMs": 207 },
+    { "id": "m-4", "status": "completed", "startedAt": "2026-09-20T12:04:00Z", "elapsedMs": 212 },
+    { "id": "m-5", "status": "completed", "startedAt": "2026-09-20T12:05:00Z", "elapsedMs": 211 }
+  ]
+}

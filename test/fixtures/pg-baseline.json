@@ -1,0 +1,125 @@
+{
+  "formatVersion": 1,
+  "vendor": "postgresql",
+  "queryFingerprint": "q_orders_customer_01",
+  "schemaDigest": "schema_orders_v3",
+  "schemaSummary": {
+    "tables": [
+      "orders",
+      "customers"
+    ],
+    "columns": {
+      "orders": [
+        "id",
+        "customer_id",
+        "status",
+        "created_at",
+        "region_id"
+      ],
+      "customers": [
+        "id",
+        "segment"
+      ]
+    }
+  },
+  "statsVersion": "stats_2026_09_18",
+  "parameters": {
+    "work_mem": "16MB",
+    "enable_hashjoin": true,
+    "timezone": "UTC",
+    "isolation": "read committed"
+  },
+  "collectedAt": "2026-09-20T08:00:00.000Z",
+  "plan": {
+    "Plan": {
+      "Node Type": "Nested Loop",
+      "Join Type": "Inner",
+      "Parent Relationship": null,
+      "Plan Rows": 1000,
+      "Total Cost": 4200.5,
+      "Output": [
+        "orders.id",
+        "customers.segment"
+      ],
+      "Plans": [
+        {
+          "Parent Relationship": "Outer",
+          "Node Type": "Seq Scan",
+          "Relation Name": "orders",
+          "Alias": "o",
+          "Plan Rows": 5000,
+          "Total Cost": 800.0,
+          "Filter": "(status = 'OPEN')",
+          "Output": [
+            "o.id",
+            "o.customer_id"
+          ],
+          "x-partitions": {
+            "selected": [
+              "p2026_09"
+            ],
+            "pruned": [
+              "p2026_07",
+              "p2026_08"
+            ],
+            "strategy": "range"
+          },
+          "Actual Rows": 4877,
+          "Actual Total Time": 12.4,
+          "Plans": []
+        },
+        {
+          "Parent Relationship": "Inner",
+          "Node Type": "Index Scan",
+          "Relation Name": "customers",
+          "Alias": "c",
+          "Index Name": "customers_pkey",
+          "Index Key": [
+            "id"
+          ],
+          "Plan Rows": 1,
+          "Total Cost": 0.8,
+          "Index Cond": "(c.id = o.customer_id)",
+          "Output": [
+            "c.id",
+            "c.segment"
+          ],
+          "Plans": []
+        }
+      ],
+      "Join Cond": "(c.id = o.customer_id)"
+    }
+  },
+  "runs": [
+    {
+      "id": "run-a-1",
+      "status": "completed",
+      "startedAt": "2026-09-20T08:01:00Z",
+      "elapsedMs": 100
+    },
+    {
+      "id": "run-a-2",
+      "status": "completed",
+      "startedAt": "2026-09-20T08:02:00Z",
+      "elapsedMs": 105
+    },
+    {
+      "id": "run-a-3",
+      "status": "completed",
+      "startedAt": "2026-09-20T08:03:00Z",
+      "elapsedMs": 97
+    },
+    {
+      "id": "run-a-4",
+      "status": "completed",
+      "startedAt": "2026-09-20T08:04:00Z",
+      "elapsedMs": 102
+    },
+    {
+      "id": "run-a-5",
+      "status": "completed",
+      "startedAt": "2026-09-20T08:05:00Z",
+      "elapsedMs": 101
+    }
+  ]
+}
