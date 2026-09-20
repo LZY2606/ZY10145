@@ -1,0 +1,63 @@
+{
+  "importId": "b8f4e9a2-7d61-4ee9-9f10-0d2e1d8d44a1",
+  "capturedAt": "2026-09-20T11:22:33.444Z",
+  "queryFingerprint": "q-orders-customer-join",
+  "statsVersion": "stats-2026-09-18-A",
+  "schema": {
+    "digest": "schema-orders-v1",
+    "tables": [
+      { "name": "orders", "columns": ["order_id", "customer_id", "amount", "created_at"] },
+      { "name": "customers", "columns": ["customer_id", "segment"] }
+    ]
+  },
+  "environment": { "vendor": "postgresql", "vendorVersion": "16.4", "database": "analytics", "timezone": "UTC" },
+  "parameters": {
+    "work_mem": "8MB",
+    "enable_hashjoin": "on",
+    "random_page_cost": 1.1,
+    "application_name": "fixture-loader"
+  },
+  "Plan": {
+    "Node Type": "Hash Join",
+    "Join Type": "Inner",
+    "Plan Rows": 10000,
+    "Plan Width": 72,
+    "Startup Cost": 120.2,
+    "Total Cost": 9000.5,
+    "Hash Cond": "(orders.customer_id = customers.customer_id)",
+    "nodeTimingKey": "join_orders_customers",
+    "Plans": [
+      {
+        "Node Type": "Index Scan",
+        "Parent Relationship": "Outer",
+        "Relation Name": "orders",
+        "Index Name": "orders_customer_id_idx",
+        "Plan Rows": 10000,
+        "Plan Width": 40,
+        "Startup Cost": 0.4,
+        "Total Cost": 3200.1,
+        "Index Cond": "(customer_id > 10)",
+        "nodeTimingKey": "scan_orders_customer_idx"
+      },
+      {
+        "Node Type": "Seq Scan",
+        "Parent Relationship": "Inner",
+        "Relation Name": "customers",
+        "Plan Rows": 500,
+        "Plan Width": 32,
+        "Startup Cost": 0,
+        "Total Cost": 90.2,
+        "Filter": "(segment = 'active'::text)",
+        "nodeTimingKey": "scan_customers_seq"
+      }
+    ]
+  },
+  "samples": [
+    { "ordinal": 1, "durationMs": 100, "nodeTimings": { "join_orders_customers": 88, "scan_orders_customer_idx": 42, "scan_customers_seq": 18 } },
+    { "ordinal": 2, "durationMs": 102, "nodeTimings": { "join_orders_customers": 89, "scan_orders_customer_idx": 43, "scan_customers_seq": 18 } },
+    { "ordinal": 3, "durationMs": 101, "nodeTimings": { "join_orders_customers": 88, "scan_orders_customer_idx": 41, "scan_customers_seq": 19 } },
+    { "ordinal": 4, "durationMs": 99, "nodeTimings": { "join_orders_customers": 86, "scan_orders_customer_idx": 42, "scan_customers_seq": 17 } },
+    { "ordinal": 5, "durationMs": 103, "nodeTimings": { "join_orders_customers": 90, "scan_orders_customer_idx": 44, "scan_customers_seq": 18 } },
+    { "ordinal": 6, "durationMs": 100, "nodeTimings": { "join_orders_customers": 88, "scan_orders_customer_idx": 42, "scan_customers_seq": 18 } }
+  ]
+}

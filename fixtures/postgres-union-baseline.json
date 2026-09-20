@@ -1,0 +1,21 @@
+{
+  "queryFingerprint": "q-union-all",
+  "statsVersion": "stats-union-1",
+  "schema": { "digest": "schema-union-v1" },
+  "environment": { "vendor": "postgresql", "vendorVersion": "16.4" },
+  "parameters": {},
+  "Plan": {
+    "Node Type": "Append",
+    "Plan Rows": 200,
+    "Plan Width": 16,
+    "Plans": [
+      { "Node Type": "Seq Scan", "Relation Name": "orders_2026", "Plan Rows": 100, "Plan Width": 16 },
+      { "Node Type": "Seq Scan", "Relation Name": "orders_2025", "Plan Rows": 100, "Plan Width": 16 }
+    ]
+  },
+  "samples": [
+    { "ordinal": 1, "durationMs": 40 },
+    { "ordinal": 2, "durationMs": 41 },
+    { "ordinal": 3, "durationMs": 39 }
+  ]
+}

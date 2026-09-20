@@ -1,0 +1,61 @@
+{
+  "sparkVersion": "3.5.2",
+  "appId": "application_1700000000000_0001",
+  "queryFingerprint": "q-events-device-join",
+  "statsVersion": "spark-stats-2026-09-01",
+  "schema": {
+    "digest": "schema-events-v2",
+    "tables": [
+      { "name": "events", "columns": ["event_id", "device_id", "event_time", "region"], "partitions": ["event_time"] },
+      { "name": "devices", "columns": ["device_id", "model"] }
+    ]
+  },
+  "environment": { "vendor": "spark", "vendorVersion": "3.5.2", "database": "lake", "timezone": "UTC" },
+  "conf": {
+    "spark.sql.shuffle.partitions": 200,
+    "spark.sql.adaptive.enabled": true,
+    "spark.app.id": "application_volatile"
+  },
+  "rootPlan": {
+    "nodeName": "BroadcastHashJoin",
+    "joinType": "Inner",
+    "estimatedRows": 20000,
+    "sizeInBytes": 2400000,
+    "condition": ["events.device_id = devices.device_id"],
+    "pathKey": "join_events_devices",
+    "children": [
+      {
+        "nodeName": "Scan parquet events",
+        "table": "events",
+        "accessPath": "partitioned-parquet",
+        "partitionColumns": ["event_time"],
+        "partitionFilters": ["event_time >= '2026-09-01'"],
+        "estimatedRows": 20000,
+        "sizeInBytes": 1800000,
+        "outputColumns": ["event_id#123L", "device_id#456"],
+        "pathKey": "scan_events"
+      },
+      {
+        "nodeName": "BroadcastExchange",
+        "estimatedRows": 800,
+        "sizeInBytes": 600000,
+        "children": [
+          {
+            "nodeName": "Scan parquet devices",
+            "table": "devices",
+            "estimatedRows": 800,
+            "sizeInBytes": 500000,
+            "pathKey": "scan_devices"
+          }
+        ]
+      }
+    ]
+  },
+  "samples": [
+    { "ordinal": 1, "durationMs": 210, "nodeTimings": { "join_events_devices": 150, "scan_events": 70 } },
+    { "ordinal": 2, "durationMs": 205, "nodeTimings": { "join_events_devices": 146, "scan_events": 72 } },
+    { "ordinal": 3, "durationMs": 215, "nodeTimings": { "join_events_devices": 152, "scan_events": 71 } },
+    { "ordinal": 4, "durationMs": 208, "nodeTimings": { "join_events_devices": 149, "scan_events": 69 } },
+    { "ordinal": 5, "durationMs": 212, "nodeTimings": { "join_events_devices": 151, "scan_events": 70 } }
+  ]
+}

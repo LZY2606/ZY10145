@@ -1,0 +1,13 @@
+{
+  "queryFingerprint": "q-missing-estimate",
+  "statsVersion": "stats-1",
+  "schema": { "digest": "schema-missing-v1" },
+  "environment": { "vendor": "postgresql", "vendorVersion": "16.4" },
+  "parameters": {},
+  "Plan": {
+    "Node Type": "Seq Scan",
+    "Relation Name": "orders",
+    "Plan Width": 12
+  },
+  "samples": [{ "ordinal": 1, "durationMs": 20 }]
+}

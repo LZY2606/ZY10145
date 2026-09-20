@@ -34,3 +34,9 @@ coverage/
 .vite/
 .turbo/
 *.tsbuildinfo
+
+# Local offline SQLite database
+.data/
+
+# Local offline SQLite database
+.data/

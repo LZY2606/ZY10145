@@ -1,0 +1,72 @@
+{
+  "sparkVersion": "3.5.2",
+  "appId": "application_1700000000000_9999",
+  "queryFingerprint": "q-events-device-join",
+  "statsVersion": "spark-stats-2026-09-10",
+  "schema": {
+    "digest": "schema-events-v2",
+    "tables": [
+      { "name": "events", "columns": ["event_id", "device_id", "event_time", "region"], "partitions": ["event_time"] },
+      { "name": "devices", "columns": ["device_id", "model"] }
+    ]
+  },
+  "environment": { "vendor": "spark", "vendorVersion": "3.5.2", "database": "lake", "timezone": "UTC" },
+  "conf": {
+    "spark.sql.shuffle.partitions": 200,
+    "spark.sql.adaptive.enabled": false,
+    "spark.executor.heartbeatInterval": "10s"
+  },
+  "rootPlan": {
+    "nodeName": "SortMergeJoin",
+    "joinType": "Inner",
+    "estimatedRows": 31000,
+    "sizeInBytes": 3100000,
+    "condition": ["events.device_id = devices.device_id"],
+    "pathKey": "join_events_devices",
+    "children": [
+      {
+        "nodeName": "Sort",
+        "estimatedRows": 20000,
+        "sizeInBytes": 1800000,
+        "order": ["device_id ASC"],
+        "pathKey": "sort_events",
+        "children": [
+          {
+            "nodeName": "Scan parquet events",
+            "table": "events",
+            "accessPath": "partitioned-parquet",
+            "partitionColumns": ["event_time"],
+            "partitionFilters": ["event_time >= '2026-09-01'"],
+            "estimatedRows": 31000,
+            "sizeInBytes": 2500000,
+            "outputColumns": ["event_id#789L", "device_id#999"],
+            "pathKey": "scan_events"
+          }
+        ]
+      },
+      {
+        "nodeName": "Sort",
+        "estimatedRows": 800,
+        "sizeInBytes": 600000,
+        "order": ["device_id ASC"],
+        "pathKey": "sort_devices",
+        "children": [
+          {
+            "nodeName": "Scan parquet devices",
+            "table": "devices",
+            "estimatedRows": 800,
+            "sizeInBytes": 500000,
+            "pathKey": "scan_devices"
+          }
+        ]
+      }
+    ]
+  },
+  "samples": [
+    { "ordinal": 1, "durationMs": 300, "nodeTimings": { "join_events_devices": 210, "scan_events": 95 } },
+    { "ordinal": 2, "durationMs": 305, "nodeTimings": { "join_events_devices": 214, "scan_events": 96 } },
+    { "ordinal": 3, "durationMs": 301, "timeout": true },
+    { "ordinal": 4, "durationMs": 298, "nodeTimings": { "join_events_devices": 208, "scan_events": 93 } },
+    { "ordinal": 5, "durationMs": 302, "nodeTimings": { "join_events_devices": 212, "scan_events": 95 } }
+  ]
+}
